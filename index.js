@@ -57,7 +57,7 @@ async function run() {
     const allproduct = client.db("Homeify").collection("Products");
     const productdetails = client.db("Homeify").collection("Products");
     const order = client.db("Homeify").collection("order");
-    const user = client.db("Homeify").collection("user");
+    const user = client.db("Homeify").collection("User");
     const payment = client.db("Homeify").collection("payment");
 
     function jwtVerify(req, res, next) {
@@ -89,6 +89,18 @@ async function run() {
       const user = await allproduct.findOne(query);
       //console.log(user);
       res.send(user);
+    });
+
+    app.post("/saveuser", async (req, res) => {
+      const data = req.body;
+      // console.log(data.email);
+      const query = { name: data.email };
+      const update = { $set: data };
+      const options = { upsert: true };
+      const result = await user.updateOne(query, update, options);
+
+      // const result = await user.insertOne(data);
+      res.send(result);
     });
   } finally {
   }
