@@ -102,6 +102,13 @@ async function run() {
       // const result = await user.insertOne(data);
       res.send(result);
     });
+
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, "SECRET", { expiresIn: 50000 });
+      // console.log(token);
+      res.send({ token });
+    });
   } finally {
   }
 }
