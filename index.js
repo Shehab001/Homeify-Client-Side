@@ -151,6 +151,13 @@ async function run() {
       const result = await allProduct.updateOne(query, update, options);
       res.send(result);
     });
+
+    app.post("/addproduct", async (req, res) => {
+      const data = req.body;
+      //console.log(data);
+      const result = await allProduct.insertOne(data);
+      res.send(result);
+    });
   } finally {
   }
 }
