@@ -54,8 +54,9 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const allproduct = client.db("Homeify").collection("Products");
+    const allProduct = client.db("Homeify").collection("Products");
     const productdetails = client.db("Homeify").collection("Products");
+    const cart = client.db("Homeify").collection("Cart");
     const order = client.db("Homeify").collection("order");
     const user = client.db("Homeify").collection("User");
     const payment = client.db("Homeify").collection("payment");
@@ -76,9 +77,9 @@ async function run() {
       // console.log(token);
     }
     //New
-    app.get("/allproduct", async (req, res) => {
+    app.get("/allProduct", async (req, res) => {
       const query = {};
-      const category = await allproduct.find(query).toArray();
+      const category = await allProduct.find(query).toArray();
       res.send(category);
     });
     app.get("/singleservice/:id", async (req, res) => {
@@ -86,7 +87,7 @@ async function run() {
       const id = req.params.id;
       console.log(id);
       const query = { _id: ObjectId(id) };
-      const user = await allproduct.findOne(query);
+      const user = await allProduct.findOne(query);
       //console.log(user);
       res.send(user);
     });
@@ -105,13 +106,37 @@ async function run() {
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
-      const token = jwt.sign(user, "SECRET", { expiresIn: 50000 });
+      const token = jwt.sign(user, "SECRET", { expiresIn: 18000 });
       // console.log(token);
       res.send({ token });
+    });
+
+    app.post("/addtocart", async (req, res) => {
+      const data = req.body;
+      // console.log(data);
+      const result = await cart.insertOne(data);
+      res.send(result);
+    });
+    app.get("/fetchcart/:id", async (req, res) => {
+      //fetch product
+      const id = req.params.id;
+      // console.log(id);
+      const query = { uid: id };
+      const product = await cart.find(query).toArray();
+      // console.log(product);
+      res.send(product);
+    });
+    app.get("/deletecartproduct/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await cart.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
 }
+
 run().catch(console.log);
 
 app.get("/", async (req, res) => {
