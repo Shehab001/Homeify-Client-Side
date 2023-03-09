@@ -128,9 +128,27 @@ async function run() {
     });
     app.get("/deletecartproduct/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      //console.log(id);
       const query = { _id: ObjectId(id) };
       const result = await cart.deleteOne(query);
+      res.send(result);
+    });
+
+    app.get("/sellerproduct/:id", async (req, res) => {
+      const email = req.params.id;
+
+      const query = { seller: email };
+      //console.log(query);
+      const result = await allProduct.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/sadvertise/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log("sadvertise", id);
+      const query = { _id: ObjectId(id) };
+      const update = { $set: { advertised: "Yes" } };
+      const options = { upsert: true };
+      const result = await allProduct.updateOne(query, update, options);
       res.send(result);
     });
   } finally {
