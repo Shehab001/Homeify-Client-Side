@@ -95,7 +95,7 @@ async function run() {
     app.post("/saveuser", async (req, res) => {
       const data = req.body;
       // console.log(data.email);
-      const query = { name: data.email };
+      const query = { email: data.email };
       const update = { $set: data };
       const options = { upsert: true };
       const result = await user.updateOne(query, update, options);
