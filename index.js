@@ -163,6 +163,14 @@ async function run() {
       const category = await user.find(query).toArray();
       res.send(category);
     });
+
+    app.get("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { uid: id };
+      const usr = await user.findOne(query);
+      res.send(usr);
+    });
   } finally {
   }
 }
