@@ -158,6 +158,11 @@ async function run() {
       const result = await allProduct.insertOne(data);
       res.send(result);
     });
+    app.get("/fetchuser", async (req, res) => {
+      const query = {};
+      const category = await user.find(query).toArray();
+      res.send(category);
+    });
   } finally {
   }
 }
