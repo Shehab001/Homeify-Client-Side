@@ -184,6 +184,19 @@ async function run() {
       const result = await report.insertOne(data);
       res.send(result);
     });
+
+    app.get("/report", async (req, res) => {
+      const query = {};
+      const category = await report.find(query).toArray();
+      res.send(category);
+    });
+    app.get("/deletereport/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await report.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
