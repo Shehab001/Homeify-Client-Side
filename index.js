@@ -57,7 +57,7 @@ async function run() {
     const allProduct = client.db("Homeify").collection("Products");
     const productdetails = client.db("Homeify").collection("Products");
     const cart = client.db("Homeify").collection("Cart");
-    const order = client.db("Homeify").collection("order");
+    const report = client.db("Homeify").collection("Reports");
     const user = client.db("Homeify").collection("User");
     const payment = client.db("Homeify").collection("payment");
 
@@ -166,10 +166,23 @@ async function run() {
 
     app.get("/user/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      //  console.log(id);
       const query = { uid: id };
       const usr = await user.findOne(query);
       res.send(usr);
+    });
+    app.get("/deleteuser/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await user.deleteOne(query);
+      res.send(result);
+    });
+    app.post("/savereport", async (req, res) => {
+      const data = req.body;
+      // console.log(data);
+      const result = await report.insertOne(data);
+      res.send(result);
     });
   } finally {
   }
