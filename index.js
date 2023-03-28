@@ -17,24 +17,7 @@ const stripe = require("stripe")(
   "sk_test_51LVKw8GSGClrvX9q7T97oJnASQEho0USM91MWBTKyIQj8sJMyqBUTjtzwvHZxgI5UQThfQ365RaTYwsHBJb9c17L00ilwp1Ynb"
 );
 
-// app.post("/create-payment-intent", async (req, res) => {
-//   const booking = req.body;
-//   const price = booking.price;
-//   const amount = price * 100;
-
-//   // Create a PaymentIntent with the order amount and currency
-//   const paymentIntent = await stripe.paymentIntents.create({
-//     amount: amount,
-//     currency: "usd",
-//     payment_methods_type: ["card"],
-//   });
-
-//   res.send({
-//     clientSecret: paymentIntent.client_secret,
-//   });
-// });
-
-//homefy
+//homeify
 //S7LWJAfdHcg_Qup
 
 // middleware
@@ -59,7 +42,7 @@ async function run() {
     const cart = client.db("Homeify").collection("Cart");
     const report = client.db("Homeify").collection("Reports");
     const user = client.db("Homeify").collection("User");
-    const payment = client.db("Homeify").collection("payment");
+    const payment = client.db("Homeify").collection("Payment");
 
     function jwtVerify(req, res, next) {
       const token = req.headers.authorization.split(" ")[1];
@@ -85,7 +68,7 @@ async function run() {
     app.get("/singleservice/:id", async (req, res) => {
       // const singleservice = userCollection.collection("serviceDetails");
       const id = req.params.id;
-      console.log(id);
+      // console.log(id);
       const query = { _id: ObjectId(id) };
       const user = await allProduct.findOne(query);
       //console.log(user);
@@ -166,7 +149,7 @@ async function run() {
 
     app.get("/user/:id", async (req, res) => {
       const id = req.params.id;
-      //  console.log(id);
+      console.log(id);
       const query = { uid: id };
       const usr = await user.findOne(query);
       res.send(usr);
@@ -195,6 +178,36 @@ async function run() {
       //console.log(id);
       const query = { _id: ObjectId(id) };
       const result = await report.deleteOne(query);
+      res.send(result);
+    });
+
+    app.post("/create-payment-intent", async (req, res) => {
+      const booking = req.body;
+      const price = booking.total;
+      const amount = price * 100;
+      // console.log(amount);
+      //console.log(price);
+      if (price === undefined) {
+        return;
+      }
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: "usd",
+        amount: amount,
+        payment_method_types: ["card"],
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    });
+    app.post("/payment", async (req, res) => {
+      const info = req.body;
+      //console.log(info);
+      const query = {
+        email: info.email,
+      };
+      const update = { $set: info };
+      const options = { upsert: true };
+      const result = await payment.updateOne(query, update, options);
       res.send(result);
     });
   } finally {
