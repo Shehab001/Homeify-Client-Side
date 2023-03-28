@@ -204,11 +204,23 @@ async function run() {
       //console.log(info);
       const query = {
         email: info.email,
+        total: info.total,
+        location: info.location,
+        status: info.status,
       };
       const update = { $set: info };
       const options = { upsert: true };
       const result = await payment.updateOne(query, update, options);
       res.send(result);
+    });
+    app.get("/payment/:id", async (req, res) => {
+      //fetch product
+      const email = req.params.id;
+      // console.log(id);
+      const query = { email: email };
+      const product = await payment.find(query).toArray();
+      // console.log(product);
+      res.send(product);
     });
   } finally {
   }
