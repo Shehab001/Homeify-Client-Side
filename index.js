@@ -229,6 +229,13 @@ async function run() {
       // console.log(product);
       res.send(product);
     });
+    app.get("/deletedashboardproduct/:id", async (req, res) => {
+      const id = req.params.id;
+      //console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await payment.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
