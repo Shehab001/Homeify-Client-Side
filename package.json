@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "projectSettings": {
+    "framework": "node",
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist"
+  },
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",

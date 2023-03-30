@@ -222,6 +222,13 @@ async function run() {
       // console.log(product);
       res.send(product);
     });
+    app.get("/cartdelete", async (req, res) => {
+      //  console.log("hi");
+      const query = {};
+      const product = await cart.deleteMany(query);
+      // console.log(product);
+      res.send(product);
+    });
   } finally {
   }
 }
