@@ -61,9 +61,17 @@ async function run() {
     }
     //New
     app.get("/allProduct", async (req, res) => {
+      const page = req.query.page - 1;
+      // console.log(page);
       const query = {};
-      const category = await allProduct.find(query).toArray();
-      res.send(category);
+      const cursor = allProduct.find(query);
+      const products = await cursor
+        .skip(page * 8)
+        .limit(8)
+        .toArray();
+      const count = await allProduct.estimatedDocumentCount();
+      //console.log(category);
+      res.send({ count, products });
     });
     app.get("/singleservice/:id", async (req, res) => {
       // const singleservice = userCollection.collection("serviceDetails");
